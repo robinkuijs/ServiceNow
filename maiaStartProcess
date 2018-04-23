@@ -1,0 +1,57 @@
+var maiaStartProcess = Class.create();
+maiaStartProcess.prototype = {
+	initialize: function() {
+	},
+	
+	
+	processparams: function (polisnummer, snid, cd_sofi, cd_relatie, idContract) {
+		
+		
+		var processParam = "";
+//		processParam += "<proc:ProcessParameter>";
+		if (polisnummer != ""){ 
+		processParam += '<proc:ProcessParameter><proc:ParameterName>Mutatie-Polisnummer</proc:ParameterName><proc:ParameterValue>' + polisnummer + '</proc:ParameterValue></proc:ProcessParameter>';
+		}
+		if (snid != ""){
+		processParam +=  '<proc:ProcessParameter><proc:ParameterName>SN_id</proc:ParameterName><proc:ParameterValue>' + snid + '</proc:ParameterValue></proc:ProcessParameter>';
+		}	
+		if (cd_sofi != ""){
+		processParam +=  '<proc:ProcessParameter><proc:ParameterName>cd_sofi</proc:ParameterName><proc:ParameterValue>' + cd_sofi + '</proc:ParameterValue></proc:ProcessParameter>';
+		}	
+		if (cd_relatie != ""){
+		processParam +=  '<proc:ProcessParameter><proc:ParameterName>cd_relatie</proc:ParameterName><proc:ParameterValue>' + cd_relatie + '</proc:ParameterValue></proc:ProcessParameter>';
+		}	
+		if (idContract != ""){
+		processParam +=  '<proc:ProcessParameter><proc:ParameterName>idContract</proc:ParameterName><proc:ParameterValue>' + idContract + '</proc:ParameterValue></proc:ProcessParameter>';
+		}	
+//		processParam += "</proc:ProcessParameter>";
+		return processParam;
+		
+	},
+	
+	processxml: function (token, processname, polisnummer, snid, cd_sofi, cd_relatie, idContract) {
+		
+		var pp = new maiaStartProcess();
+		var processparams = pp.processparams(polisnummer, snid, cd_sofi, cd_relatie, idContract);
+		
+		var s = new sn_ws.SOAPMessageV2('x_centr_pensioen.Maia Proces', 'StartProcess');
+		s.setStringParameterNoEscape('ModuleName', "DBDC");
+		s.setStringParameterNoEscape('Token', token);
+		s.setStringParameterNoEscape('ProcessParameters', processparams);
+		s.setStringParameterNoEscape('ProcessName', processname);
+		gs.info('Process parameters' + processparams);
+		
+		var response = s.execute();
+		gs.info("StartProcess requestBody:\n\n" + s.getRequestBody());
+		var responseBody = response.getBody();
+	//	gs.info("StartProcess responseBody:\n\n" + responseBody);
+		var status = response.getStatusCode();
+		gs.info("StartProcess statuscode:\n\n" + status);
+		
+		
+	}
+	
+	
+	
+	
+};
