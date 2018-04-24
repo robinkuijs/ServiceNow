@@ -1,0 +1,25 @@
+var getProcessParameters2 = Class.create();
+getProcessParameters2.prototype = {
+	initialize: function() {
+	},
+
+getProcessParameters2String : function(xprocessparams) {
+	// Tijdelijk alternatief, opbouw van de soap request dmv xml elementen heeft voorkeur zie getProcessParameters2
+
+	
+	
+	var resultaat = "<proc:ProcessParameters>";
+	var obj = xprocessparams;
+	for (var key in obj) {
+		if ((obj[key] != null) && (obj[key] != "")) {
+			resultaat += "<proc:ProcessParameter>" +
+			"<proc:ParameterName>" + key + "</proc:ParameterName>" +
+			"<proc:ParameterValue>" + obj[key] + "</proc:ParameterValue>" +
+			"</proc:ProcessParameter>";
+		}
+	}
+	resultaat += "</proc:ProcessParameters>";
+	gs.info("RESULTAAT: " + resultaat);
+	return resultaat;
+	
+}
